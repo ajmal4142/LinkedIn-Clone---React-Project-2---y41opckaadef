@@ -16,8 +16,6 @@ Features
 
 -Authentication: Connect to a server for user registration and login.
 
--Messaging: Implement a messaging system for communication with connections.
-
 -Groups and Subscriptions: Create and manage groups, explore premium subscription options (not functional).
 
 
