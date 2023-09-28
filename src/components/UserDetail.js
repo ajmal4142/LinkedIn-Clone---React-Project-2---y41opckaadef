@@ -160,7 +160,12 @@ const UserDetail = () => {
         width="50%"
         ml="13px"
         sx={{ "@media(max-width:650px)": { width: "93.4%" } }}>
-        <Box pb="1px" sx={{ background: "white" }}>
+        <Box
+          pb="1px"
+          sx={{
+            background: "white",
+            "@media(max-width:650px)": { width: "100%", ml: "6px" },
+          }}>
           <Postbar />
         </Box>
         <Box
@@ -169,7 +174,7 @@ const UserDetail = () => {
           mt="7px"
           sx={{
             display: ownPost.length === 0 ? "none" : "flex",
-            "@media(max-width:650px)": { width: "93.4%" },
+            "@media(max-width:650px)": { width: "97.4%", ml: "6px" },
           }}
           gap="5px">
           {ownPost?.map((post) => {
@@ -178,14 +183,15 @@ const UserDetail = () => {
                 width="100%"
                 borderRadius="13px"
                 display="flex"
-                padding="20px 20px 0 20px"
+                padding="20px 32px 0px 0px"
                 flexDirection="column"
                 sx={{
                   background: "white",
                   cursor: "pointer",
+                  "@media(max-width:760px)": { pr: "20px" },
                 }}>
                 <Box display="flex" justifyContent="space-between">
-                  <Box display="flex">
+                  <Box display="flex" ml="20px">
                     <Avatar width="50px" height="50px">
                       A
                     </Avatar>
@@ -206,7 +212,7 @@ const UserDetail = () => {
                 <Box
                   display="flex"
                   flexDirection="column"
-                  ml="15px"
+                  ml="35px"
                   pl="31px"
                   pb="10px">
                   <Typography

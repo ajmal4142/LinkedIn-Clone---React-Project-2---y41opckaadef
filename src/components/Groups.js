@@ -148,7 +148,10 @@ const Groups = () => {
   return (
     <Box
       width="70%"
-      sx={{ background: "white" }}
+      sx={{
+        background: "white",
+        "@media(max-width:650px)": { width: "90%" },
+      }}
       borderRadius="10px"
       m="auto"
       mt="20px">

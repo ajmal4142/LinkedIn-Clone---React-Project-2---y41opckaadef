@@ -111,5 +111,6 @@ body{
 @media (max-width:644px){
   .homepagefeed{
     flex-direction: column;
+    margin-left: 13px;
   }
 }

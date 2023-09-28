@@ -311,7 +311,11 @@ const PostSection = () => {
                         "&:hover": { background: "#f1efef" },
                       }}>
                       <ThumbUpIcon />
-                      <Typography ml="5px">Like</Typography>
+                      <Typography
+                        ml="5px"
+                        sx={{ "@media(max-width:420px)": { display: "none" } }}>
+                        Like
+                      </Typography>
                     </Box>
                     <Box
                       display="flex"
@@ -326,7 +330,11 @@ const PostSection = () => {
                         "&:hover": { background: "#f1efef" },
                       }}>
                       <MessageIcon />
-                      <Typography ml="5px">Comment</Typography>
+                      <Typography
+                        ml="5px"
+                        sx={{ "@media(max-width:420px)": { display: "none" } }}>
+                        Comment
+                      </Typography>
                     </Box>
                     <Box
                       display="flex"
@@ -340,7 +348,11 @@ const PostSection = () => {
                         "&:hover": { background: "#f1efef" },
                       }}>
                       <RepeatIcon />
-                      <Typography ml="5px">Repost</Typography>
+                      <Typography
+                        ml="5px"
+                        sx={{ "@media(max-width:420px)": { display: "none" } }}>
+                        Repost
+                      </Typography>
                     </Box>
                     <Box
                       display="flex"
@@ -355,7 +367,11 @@ const PostSection = () => {
                         "&:hover": { background: "#f1efef" },
                       }}>
                       <SendIcon />
-                      <Typography ml="5px">Send</Typography>
+                      <Typography
+                        ml="5px"
+                        sx={{ "@media(max-width:420px)": { display: "none" } }}>
+                        Send
+                      </Typography>
                     </Box>
                   </Box>
                   {post.comment && (
@@ -377,7 +393,7 @@ const PostSection = () => {
                         }}
                         value={comment}
                         id={`outlined-basic-${post._id}`}
-                        sx={{ weight: "86%", ml: "10px" }}
+                        sx={{ width: "85%", ml: "10px" }}
                         placeholder="Enter your comment.."
                         variant="outlined"
                       />

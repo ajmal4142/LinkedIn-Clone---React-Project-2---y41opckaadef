@@ -20,8 +20,6 @@ const SideBar = () => {
           "@media (max-width: 644px)": {
             width: "94%",
             alignSelf: "center",
-            ml: "11px",
-            mb: "10px",
           },
         }}>
         <Avatar
@@ -88,7 +86,7 @@ const SideBar = () => {
         display="flex"
         flexDirection="column"
         borderRadius="10px"
-        m="15px 0px 10px 0px"
+        m="8px 0px 8px 0px"
         sx={{
           background: "white",
           height: "max-content",

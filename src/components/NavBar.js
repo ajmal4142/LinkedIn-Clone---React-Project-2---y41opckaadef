@@ -250,7 +250,11 @@ const NavBar = () => {
               <ToggleButton
                 value="notification"
                 display="flex"
-                sx={{ flexDirection: "column", border: "none" }}>
+                sx={{
+                  flexDirection: "column",
+                  border: "none",
+                  "@media(max-width:460px)": { display: "none" },
+                }}>
                 <NotificationsIcon />
                 {isSmallScreen ? null : (
                   <Typography
