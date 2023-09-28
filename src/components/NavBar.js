@@ -152,8 +152,9 @@ const NavBar = () => {
                 placeholder="Search..."
                 sx={{
                   height: "45px",
-                  mt: "5px",
+                  mt: "0px",
                   ml: "5px",
+                  pb: "9px",
                   background: "#edf3f8",
                 }}
                 InputProps={{
@@ -203,23 +204,6 @@ const NavBar = () => {
                 )}
               </ToggleButton>
               <ToggleButton
-                value="network"
-                display="flex"
-                onClick={() => {
-                  navigate("/signin");
-                }}
-                sx={{ flexDirection: "column", border: "none" }}>
-                <SensorsIcon />
-                {isSmallScreen ? null : (
-                  <Typography
-                    variant="h2"
-                    fontSize="13px"
-                    sx={{ textTransform: "none" }}>
-                    Network
-                  </Typography>
-                )}
-              </ToggleButton>
-              <ToggleButton
                 onClick={() => navigate("/group")}
                 value="job"
                 display="flex"
@@ -234,6 +218,21 @@ const NavBar = () => {
                   </Typography>
                 )}
               </ToggleButton>
+              <ToggleButton
+                value="network"
+                display="flex"
+                sx={{ flexDirection: "column", border: "none" }}>
+                <SensorsIcon />
+                {isSmallScreen ? null : (
+                  <Typography
+                    variant="h2"
+                    fontSize="13px"
+                    sx={{ textTransform: "none" }}>
+                    Network
+                  </Typography>
+                )}
+              </ToggleButton>
+
               <ToggleButton
                 value="messaging"
                 display="flex"

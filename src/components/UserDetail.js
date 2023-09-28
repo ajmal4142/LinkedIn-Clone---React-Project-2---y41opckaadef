@@ -12,13 +12,13 @@ import {
 } from "@mui/material";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import MessageIcon from "@mui/icons-material/Message";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SideBar from "./home/SideBar";
 import Postbar from "./home/Postbar";
 import axios from "axios";
 import InsertPhotoIcon from "@mui/icons-material/InsertPhoto";
 import RefreshIcon from "@mui/icons-material/Refresh";
+import CachedIcon from "@mui/icons-material/Cached";
 
 const UserDetail = () => {
   const [{ ownPost, userName, token }, dispatch] = useStateProvider();
@@ -197,7 +197,7 @@ const UserDetail = () => {
                       {userName}
                     </Typography>
                   </Box>
-                  <DeleteForeverIcon
+                  <CachedIcon
                     onClick={() => {
                       openModal(post);
                     }}

@@ -18,7 +18,7 @@ function App() {
   const navigate = useNavigate();
   const [{ token }] = useStateProvider();
   useEffect(() => {
-    if (location.pathname === "/" && !token) {
+    if (!token && location.pathname != "/signin") {
       navigate("/signin");
     }
   }, [location.pathname, history]);

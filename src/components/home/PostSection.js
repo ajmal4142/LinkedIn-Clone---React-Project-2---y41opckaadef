@@ -359,7 +359,13 @@ const PostSection = () => {
                     </Box>
                   </Box>
                   {post.comment && (
-                    <Box display="flex" pb="20px">
+                    <Box
+                      display="flex"
+                      pb="20px"
+                      alignItems="center"
+                      width="100%"
+                      gap="5px"
+                      borderBottom="1px solid rgba(0,0,0,0.3)">
                       <Avatar
                         sx={{ width: "40px", height: "40px", ml: "10px" }}>
                         A
@@ -370,8 +376,8 @@ const PostSection = () => {
                           setComment(e.target.value);
                         }}
                         value={comment}
-                        style={{ weight: "100%" }}
                         id={`outlined-basic-${post._id}`}
+                        sx={{ weight: "86%", ml: "10px" }}
                         placeholder="Enter your comment.."
                         variant="outlined"
                       />
