@@ -1,70 +1,100 @@
-# Getting Started with Create React App
+LinkedIn Clone
+-
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Project Overview
+This project is an educational endeavor focused on enhancing React.js skills and adhering to best practices in UI development. It replicates the core features of LinkedIn, a popular professional networking platform. Please note that this project is for educational purposes only and should not be deployed or used for commercial purposes.
 
-## Available Scripts
+Features
+-
+-Home Page and Featured Content: Browse and discover featured content on the home page.
 
-In the project directory, you can run:
+-User Profile: Create and customize your professional profile, showcasing your details, experience, and skills.
 
-### `npm start`
+-Post Interaction: View and interact with posts, including liking, commenting, and sharing.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+-Search Functionality: Use the search bar to find job opportunities, posts, and users.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+-Authentication: Connect to a server for user registration and login.
 
-### `npm test`
+-Messaging: Implement a messaging system for communication with connections.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+-Groups and Subscriptions: Create and manage groups, explore premium subscription options (not functional).
 
-### `npm run build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Tech Stack
+-
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+-HTML
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+-CSS
 
-### `npm run eject`
+-JavaScript
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+-React
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Credits
+-
+-Icons from React and Material UI.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+-The project is designed to be fully responsive.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+-Utilizes Material User Interface (MUI).
 
-## Learn More
+-Global state management is implemented using createContext and useContext.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Project Context
+-
+The LinkedIn Clone project aims to create an application that mirrors the core functionalities of LinkedIn, a widely-used professional networking platform. Users can create professional profiles, connect with others, explore job opportunities, and engage with posts.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+LinkedIn offers a platform for job searching, professional development, and building professional connections. The LinkedIn clone offers a similar experience, allowing users to create professional profiles, connect with others, and explore job opportunities.
 
-### Code Splitting
+APIs Used
+-
+To fetch data, the following APIs have been used:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Get a list of posts:
+-
+fetch('https://academics.newtonschool.co/api/v1/linkedin/post', {
+  headers: {
+    'projectId': 'PROJECT_ID'
+  }
+})
 
-### Analyzing the Bundle Size
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Get user details by ID:
+-
+fetch('https://academics.newtonschool.co/api/v1/linkedin/user/:userId', {
+  headers: {
+    'projectId': 'PROJECT_ID'
+  }
+})
 
-### Making a Progressive Web App
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+Follow/unfollow a user:
+-
+fetch('https://academics.newtonschool.co/api/v1/linkedin/follow/:userId', {
+  headers: {
+    'Authorization': 'Bearer YOUR_JWT_TOKEN',
+    'projectId': 'PROJECT_ID'
+  }
+})
 
-### Advanced Configuration
+Create and manage groups:
+-
+fetch('https://academics.newtonschool.co/api/v1/linkedin/channel/', {
+  headers: {
+    'Authorization': 'Bearer YOUR_JWT_TOKEN',
+    'projectId': 'PROJECT_ID'
+  },
+  body: {
+    'title': 'postTitle',
+    'description': 'postDescription',
+    'images': 'postImage',
+  }
+})
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+Please note that certain features like sorting are not implemented in this project but can be added in the future.
 
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+How to Use
+-
+Clone the repository and follow the instructions to set up the project locally. Remember that this project is for educational purposes only and should not be deployed or used commercially.
