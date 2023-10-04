@@ -12,6 +12,9 @@ import Details from "./Details";
 import Groups from "./Groups";
 import { useStateProvider } from "../utils/StateProvider";
 import { useEffect } from "react";
+import Network from "./Network";
+import Message from "./Message";
+import Notification from "./Notification";
 
 function App() {
   const location = useLocation();
@@ -41,6 +44,9 @@ function App() {
             <Route path="/user" element={<UserDetail />} />
             <Route path="/detail" element={<Details />} />
             <Route path="/group" element={<Groups />} />
+            <Route path="/network" element={<Network />} />
+            <Route path="/message" element={<Message />} />
+            <Route path="/notification" element={<Notification />} />
           </Routes>
         </>
       )}

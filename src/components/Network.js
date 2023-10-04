@@ -1,10 +1,10 @@
 import React from "react";
-import message from "../images/message.png";
+import job from "../images/job.png";
 
-function Message() {
+function Network() {
   return (
     <img
-      src={message}
+      src={job}
       alt="message"
       style={{
         maxWidth: "100%",
@@ -14,4 +14,4 @@ function Message() {
   );
 }
 
-export default Message;
+export default Network;

@@ -17,13 +17,13 @@ const SideBar = () => {
         sx={{
           background: "white",
           height: "max-content",
-          "@media (max-width: 644px)": {
+          "@media (max-width: 644px)": { 
             width: "94%",
             alignSelf: "center",
           },
         }}>
         <Avatar
-          onClick={() => navigate("/user")}
+          onClick={() => navigate("/user")} 
           sx={{
             width: "72px",
             height: "72px",

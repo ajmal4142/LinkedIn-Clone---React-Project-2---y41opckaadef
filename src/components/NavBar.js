@@ -219,6 +219,7 @@ const NavBar = () => {
                 )}
               </ToggleButton>
               <ToggleButton
+                onClick={() => navigate("/network")}
                 value="network"
                 display="flex"
                 sx={{ flexDirection: "column", border: "none" }}>
@@ -228,12 +229,13 @@ const NavBar = () => {
                     variant="h2"
                     fontSize="13px"
                     sx={{ textTransform: "none" }}>
-                    Network
+                    Jobs
                   </Typography>
                 )}
               </ToggleButton>
 
               <ToggleButton
+                onClick={() => navigate("/message")}
                 value="messaging"
                 display="flex"
                 sx={{ flexDirection: "column", border: "none" }}>
@@ -248,6 +250,7 @@ const NavBar = () => {
                 )}
               </ToggleButton>
               <ToggleButton
+                onClick={() => navigate("/notification")}
                 value="notification"
                 display="flex"
                 sx={{
