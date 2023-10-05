@@ -9,6 +9,8 @@ const NewsFeed = () => {
       flexDirection="column"
       borderRadius="10px"
       ml="20px"
+      position="sticky"
+      top="20px"
       sx={{
         background: "white",
         height: "max-content",

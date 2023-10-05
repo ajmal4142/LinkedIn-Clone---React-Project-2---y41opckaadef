@@ -34,6 +34,10 @@ function App() {
 
       const ownPostData = JSON.parse(localStorage.getItem("ownPostData")) || [];
       dispatch({ type: "SET_OWNPOST", payload: ownPostData });
+    } else if (location.pathname === "/signup") {
+      navigate("/signup");
+    } else if (location.pathname === "/forgot") {
+      navigate("/forgot");
     } else {
       navigate("/signin");
     }

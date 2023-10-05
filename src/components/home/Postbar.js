@@ -15,6 +15,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useStateProvider } from "../../utils/StateProvider";
 import InsertPhotoIcon from "@mui/icons-material/InsertPhoto";
 import axios from "axios";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const Postbar = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -88,10 +89,12 @@ const Postbar = () => {
   useEffect(() => {
     console.log(ownPost);
   }, [ownPost]);
+  const navigate = useNavigate();
   return (
     <Box width="100%" borderRadius="10px" sx={{ background: "white" }}>
       <Box display="flex">
         <Avatar
+          onClick={() => navigate("/user")}
           sx={{
             width: "50px",
             height: "50px",
@@ -99,7 +102,7 @@ const Postbar = () => {
             cursor: "pointer",
             mt: "10px",
           }}>
-          A
+          {userName[0]}
         </Avatar>
         <Box
           border="1px solid gray"
@@ -120,19 +123,19 @@ const Postbar = () => {
         </Box>
       </Box>
       <Box display="flex" justifyContent="space-around" my="10px">
-        <Box display="flex" sx={{ cursor: "pointer" }}>
+        <Box display="flex" sx={{ cursor: "pointer" }} onClick={openModal}>
           <ImageIcon sx={{ color: "#378fe9" }} />
           <Typography variant="h2" fontSize="14px" alignSelf="center" ml="5px">
             Media
           </Typography>
         </Box>
-        <Box display="flex" sx={{ cursor: "pointer" }}>
+        <Box display="flex" sx={{ cursor: "pointer" }} onClick={openModal}>
           <CalendarMonthIcon sx={{ color: "#cb8f36" }} />
           <Typography variant="h2" fontSize="14px" alignSelf="center" ml="5px">
             Event
           </Typography>
         </Box>
-        <Box display="flex" sx={{ cursor: "pointer" }}>
+        <Box display="flex" sx={{ cursor: "pointer" }} onClick={openModal}>
           <ArticleIcon sx={{ color: "#e06847" }} />
           <Typography variant="h2" fontSize="14px" alignSelf="center" ml="5px">
             Write Article

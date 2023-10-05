@@ -52,7 +52,6 @@ function SignUp() {
       console.log(response);
       if (response.status === 201) {
         console.log(response);
-        console.log(userData);
         alert("SuccessFully SignedUp");
         setTimeout(() => {
           navigate("/signin");

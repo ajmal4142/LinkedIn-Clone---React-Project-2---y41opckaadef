@@ -7,8 +7,8 @@ function Message() {
       src={message}
       alt="message"
       style={{
-        maxWidth: "100%",
-        height: "auto",
+        width: "100%",
+        height: "470px",
       }}
     />
   );

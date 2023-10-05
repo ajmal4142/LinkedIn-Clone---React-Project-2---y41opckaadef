@@ -100,6 +100,11 @@ const Groups = () => {
       })
       .catch((err) => {
         console.log(err);
+        if (
+          err.response.data.message === "Channel with this name already exists"
+        ) {
+          alert("Channel with this name already exists... Try Something else");
+        }
       });
   };
 

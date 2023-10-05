@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useStateProvider } from "../utils/StateProvider";
 import { Box, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
@@ -12,6 +12,12 @@ const Search = () => {
     console.log("search", searchPost);
     navigate("/detail");
   };
+
+  useEffect(() => {
+    if (!searchPost) {
+      navigate("/");
+    }
+  }, [searchPost]);
   return (
     <Box alignItems="center" display="flex" justifyContent="center">
       {!searchPost ? (

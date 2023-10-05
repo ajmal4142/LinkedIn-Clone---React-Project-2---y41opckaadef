@@ -31,7 +31,7 @@ const NavBar = () => {
   const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth <= 980);
   const [searchInputVisible, setSearchInputVisible] = useState(false);
   const [search, setSearch] = useState("");
-  const [{ posts }] = useStateProvider();
+  const [{ posts, userName }] = useStateProvider();
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -95,6 +95,12 @@ const NavBar = () => {
     console.log(result);
     dispatch({ type: "SET_SEARCH", payload: result });
     navigate("/search");
+  };
+
+  const handleSignOut = () => {
+    localStorage.removeItem("jwtToken");
+    localStorage.removeItem("userName");
+    navigate("/signin");
   };
 
   return (
@@ -295,7 +301,9 @@ const NavBar = () => {
                 }}
                 variant="contained"
                 onClick={handleClick}>
-                <Avatar sx={{ width: "25px", height: "25px" }} />
+                <Avatar sx={{ width: "25px", height: "25px" }}>
+                  {userName[0]}
+                </Avatar>
                 {isSmallScreen ? null : (
                   <Typography
                     variant="h3"
@@ -324,7 +332,9 @@ const NavBar = () => {
                     navigate("/");
                     handleClose();
                   }}>
-                  <Avatar sx={{ width: "25px", height: "25px" }} />{" "}
+                  <Avatar sx={{ width: "25px", height: "25px" }}>
+                    {userName[0]}
+                  </Avatar>{" "}
                   {localStorage.getItem("userName")}
                 </MenuItem>
                 <MenuItem
@@ -341,48 +351,8 @@ const NavBar = () => {
                   }}>
                   Try Premium for free
                 </MenuItem>
-                {/* <MenuItem>Sign Out</MenuItem> */}
+                <MenuItem onClick={handleSignOut}>Sign Out</MenuItem>
               </Popover>
-              {/* <ToggleButton
-                value="me"
-                display="flex"
-                sx={{ flexDirection: "column", border: "none" }}>
-                <Avatar sx={{ width: "25px", height: "25px" }} />
-                <Stack display="flex" flexDirection="row" mt="2px">
-                  {isSmallScreen ? null : (
-                    <Typography
-                      variant="h3"
-                      sx={{ textTransform: "none" }}
-                      fontSize="15px">
-                      {localStorage.getItem("userName")}
-                    </Typography>
-                  )}
-                  <Select
-                    sx={{
-                      width: "35px",
-                      height: "20px",
-                      ml: "3px",
-                      borderRadius: "25px",
-                    }}
-                    // onChange={handleChange}
-                  >
-                    <MenuItem>
-                      <Avatar sx={{ width: "25px", height: "25px" }} />{" "}
-                      {localStorage.getItem("userName")}
-                    </MenuItem>
-                    <MenuItem
-                      onClick={() => {
-                        navigate("/user");
-                      }}>
-                      View Profile
-                    </MenuItem>
-                    <MenuItem onClick={() => navigate("/premium")}>
-                      Try Premium for free
-                    </MenuItem>
-                    <MenuItem>Sign Out</MenuItem>
-                  </Select>
-                </Stack>
-              </ToggleButton> */}
             </ToggleButtonGroup>
           </Stack>
         </>

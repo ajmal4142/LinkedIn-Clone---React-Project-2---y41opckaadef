@@ -14,16 +14,18 @@ const SideBar = () => {
         display="flex"
         flexDirection="column"
         borderRadius="10px"
+        position="sticky"
+        top="20px"
         sx={{
           background: "white",
           height: "max-content",
-          "@media (max-width: 644px)": { 
+          "@media (max-width: 644px)": {
             width: "94%",
             alignSelf: "center",
           },
         }}>
         <Avatar
-          onClick={() => navigate("/user")} 
+          onClick={() => navigate("/user")}
           sx={{
             width: "72px",
             height: "72px",
@@ -31,7 +33,7 @@ const SideBar = () => {
             background: "#0a66c2",
             cursor: "pointer",
           }}>
-          A
+          {userName[0]}
         </Avatar>
 
         <Typography

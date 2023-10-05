@@ -336,7 +336,7 @@ const PostSection = () => {
                         Comment
                       </Typography>
                     </Box>
-                    <Box
+                    {/* <Box
                       display="flex"
                       height="40px"
                       sx={{
@@ -372,7 +372,7 @@ const PostSection = () => {
                         sx={{ "@media(max-width:420px)": { display: "none" } }}>
                         Send
                       </Typography>
-                    </Box>
+                    </Box> */}
                   </Box>
                   {post.comment && (
                     <Box
