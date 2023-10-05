@@ -9,6 +9,7 @@ import {
   Input,
   Typography,
   Button,
+  Popover,
 } from "@mui/material";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import MessageIcon from "@mui/icons-material/Message";
@@ -19,29 +20,53 @@ import axios from "axios";
 import InsertPhotoIcon from "@mui/icons-material/InsertPhoto";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import CachedIcon from "@mui/icons-material/Cached";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import { useNavigate } from "react-router-dom";
+import EditIcon from "@mui/icons-material/Edit";
 
 const UserDetail = () => {
   const [{ ownPost, userName, token }, dispatch] = useStateProvider();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalTwoOpen, setIsModalTwoOpen] = useState(false);
   const [postTitle, setPostTitle] = useState("");
   const [postContent, setPostContent] = useState("");
   const [postImage, setPostImage] = useState(null);
+  const [comment, setComment] = useState("");
   const [flag, setflag] = useState("");
   const [saveId, setSaveId] = useState("");
-
+  const [anchorEl, setAnchorEl] = useState(null);
   const fileInputRef = useRef(null);
+  const [resetComment, setResetComment] = useState("");
+  const [commentId, setCommentId] = useState(-1);
 
-  const openModal = (post) => {
+  const openModal = (postId) => {
+    setAnchorEl(null);
     setPostImage(null);
     setflag("");
     setIsModalOpen(true);
-    setSaveId(post._id);
     console.log(token);
+  };
+
+  const handleOpenModal = (id) => {
+    console.log(id);
+    openModal(id);
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
   };
+
+  const openModalTwo = (post, index) => {
+    setCommentId(index);
+    setIsModalTwoOpen(true);
+    setSaveId(post._id);
+    console.log(post._id);
+  };
+
+  const closeModalTwo = () => {
+    setIsModalTwoOpen(false);
+  };
+
   const handleIconClick = () => {
     fileInputRef.current.click();
   };
@@ -55,45 +80,41 @@ const UserDetail = () => {
     }
   };
 
-  const handleRepost = (post) => {
-    const postIndex = ownPost.findIndex((p) => p._id === post._id);
+  const handleRepost = () => {
+    const postIndex = ownPost.findIndex((p) => p._id === saveId);
+    console.log(saveId);
 
     if (postIndex !== -1) {
       const updatedPosts = [...ownPost];
       updatedPosts.splice(postIndex, 1);
-      dispatch({ type: "SET_OWNPOSTDUP", payload: updatedPosts });
+      localStorage.setItem("ownPostData", JSON.stringify(updatedPosts));
+      const ownPostDatas =
+        JSON.parse(localStorage.getItem("ownPostData")) || [];
+      dispatch({ type: "SET_OWNPOST", payload: ownPostDatas });
     }
+    handleClose();
   };
-  const handlePostSubmit = async () => {
-    console.log(postTitle);
-    console.log(postContent);
-    console.log(postImage);
-    const body = new FormData();
-    body.append("title", postTitle);
-    body.append("content", postContent);
-    body.append("images", postImage);
-    console.log(saveId);
-    await axios
-      .patch(
-        `https://academics.newtonschool.co/api/v1/linkedin/post/${saveId}/`,
-        body,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            projectId: "f104bi07c490",
-          },
-        },
-      )
-      .then((response) => {
-        console.log(response);
+  const handlePostSubmit = () => {
+    const ownPostData = JSON.parse(localStorage.getItem("ownPostData")) || [];
 
-        dispatch({ type: "SET_OWNPOST", payload: response.data.data });
-      })
-      .catch((err) => console.log(err));
+    console.log("saveId:", saveId);
+    const filteredPostIndex = ownPostData.findIndex(
+      (post) => post._id === saveId,
+    );
+    console.log("filteredPostIndex:", filteredPostIndex);
 
+    ownPostData[filteredPostIndex].title = postTitle;
+    ownPostData[filteredPostIndex].content = postContent;
+    if (!postImage) {
+      ownPostData[filteredPostIndex]?.image?.push(postImage);
+    }
+    localStorage.setItem("ownPostData", JSON.stringify(ownPostData));
+    const ownPostDatas = JSON.parse(localStorage.getItem("ownPostData")) || [];
+    dispatch({ type: "SET_OWNPOST", payload: ownPostDatas });
+
+    console.log(ownPost);
     setPostTitle("");
     setPostContent("");
-    console.log("hey there");
     setPostImage(null);
 
     closeModal();
@@ -119,32 +140,94 @@ const UserDetail = () => {
     }
   };
 
-  // const handleCommentAdd = async (post) => {
-  //   const bodyContent = JSON.stringify({
-  //     content: "content",
-  //   });
-  //   let headersList = {
-  //     Authorization: `Bearer ${token}`,
-  //     projectId: "f104bi07c490",
-  //   };
+  const handleCommentAdd = (post) => {
+    const postIndex = ownPost.findIndex((p) => p._id === post._id);
+    setSaveId(postIndex);
+    ownPost[postIndex].comment = true;
 
-  //   await axios
-  //     .post(
-  //       `https://academics.newtonschool.co/api/v1/linkedin/comment/${post._id}`,
-  //       { headers: headersList },
-  //       { body: bodyContent },
-  //     )
-  //     .then((response) => {
-  //       console.log(post._id);
-  //       console.log(response);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  //   setPostTitle("");
-  //   setPostContent("");
-  //   setPostImage(null);
-  // };
+    localStorage.setItem("ownPostData", JSON.stringify(ownPost));
+    const ownPostDatas = JSON.parse(localStorage.getItem("ownPostData")) || [];
+    dispatch({ type: "SET_OWNPOST", payload: ownPostDatas });
+  };
+
+  const handleComment = (event, post) => {
+    const postIndex = ownPost.findIndex((p) => p._id === post._id);
+    if (event.key === "Enter") {
+      const existingComments = ownPost[postIndex].commentPost;
+      if (existingComments && existingComments.length > 0) {
+        ownPost[postIndex].commentPost = [...existingComments, comment];
+      } else {
+        ownPost[postIndex].commentPost = [comment];
+      }
+      localStorage.setItem("ownPostData", JSON.stringify(ownPost));
+      const ownPostDatas =
+        JSON.parse(localStorage.getItem("ownPostData")) || [];
+      dispatch({ type: "SET_OWNPOST", payload: ownPostDatas });
+      console.log(comment);
+      console.log(ownPost[postIndex]);
+      setComment("");
+    }
+  };
+  const handleEditComment = (event) => {
+    if (event.key === "Enter") {
+      const postIndex = ownPost.findIndex((p) => p._id === saveId);
+      console.log("post", postIndex);
+      if (postIndex !== -1) {
+        const existingComments = ownPost[postIndex].commentPost;
+        if (existingComments.length > 0) {
+          if (commentId !== -1) {
+            console.log(resetComment);
+            existingComments[commentId] = resetComment;
+          }
+        }
+        ownPost[postIndex].commentPost = existingComments;
+
+        localStorage.setItem("ownPostData", JSON.stringify(ownPost));
+        const ownPostDatas =
+          JSON.parse(localStorage.getItem("ownPostData")) || [];
+        dispatch({ type: "SET_OWNPOST", payload: ownPostDatas });
+
+        setResetComment("");
+      }
+    }
+  };
+
+  const handleDeleteComment = () => {
+    if (saveId !== "" && commentId !== -1) {
+      const postIndex = ownPost.findIndex((p) => p._id === saveId);
+
+      if (postIndex !== -1) {
+        const existingComments = ownPost[postIndex].commentPost;
+
+        if (existingComments.length > commentId) {
+          existingComments.splice(commentId, 1);
+
+          ownPost[postIndex].commentPost = existingComments;
+
+          localStorage.setItem("ownPostData", JSON.stringify(ownPost));
+          const ownPostDatas =
+            JSON.parse(localStorage.getItem("ownPostData")) || [];
+          dispatch({ type: "SET_OWNPOST", payload: ownPostDatas });
+
+          closeModalTwo();
+        }
+      }
+    }
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleClick = (event, post) => {
+    setAnchorEl(event.currentTarget);
+    setSaveId(post._id);
+    console.log(post._id);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? "simple-popover" : undefined;
+  const navigate = useNavigate();
 
   return (
     <Box
@@ -180,10 +263,11 @@ const UserDetail = () => {
           {ownPost?.map((post) => {
             return (
               <Box
+                key={post._id}
                 width="100%"
                 borderRadius="13px"
                 display="flex"
-                padding="20px 32px 0px 0px"
+                padding="20px 16px 0px 16px"
                 flexDirection="column"
                 sx={{
                   background: "white",
@@ -191,7 +275,7 @@ const UserDetail = () => {
                   "@media(max-width:760px)": { pr: "20px" },
                 }}>
                 <Box display="flex" justifyContent="space-between">
-                  <Box display="flex" ml="20px">
+                  <Box display="flex" ml="8px">
                     <Avatar width="50px" height="50px">
                       A
                     </Avatar>
@@ -203,16 +287,63 @@ const UserDetail = () => {
                       {userName}
                     </Typography>
                   </Box>
-                  <CachedIcon
-                    onClick={() => {
-                      openModal(post);
+                  <MoreHorizIcon
+                    aria-describedby={id}
+                    onClick={(e) => handleClick(e, post)}
+                    sx={{
+                      alignSelf: "center",
+                      mr: "16px",
+                      borderRadius: "25px",
+                      "&:hover": { background: "lightgray" },
                     }}
                   />
+                  <Popover
+                    id={id}
+                    open={open}
+                    anchorEl={anchorEl}
+                    onClose={handleClose}
+                    anchorOrigin={{
+                      vertical: "bottom",
+                      horizontal: "left",
+                    }}
+                    transformOrigin={{
+                      vertical: "top",
+                      horizontal: "right",
+                    }}>
+                    <Box
+                      display="flex"
+                      height="40px"
+                      p="10px 10px 0px 10px"
+                      onClick={handleRepost}
+                      sx={{
+                        cursor: "pointer",
+                        color: "#676767",
+                        "&:hover": { background: "#f1efef" },
+                      }}>
+                      <Typography ml="5px">Delete Post</Typography>
+                    </Box>
+                    <Box
+                      display="flex"
+                      height="40px"
+                      p="10px 10px 0px 10px"
+                      sx={{
+                        cursor: "pointer",
+                        color: "#676767",
+                        "&:hover": { background: "#f1efef" },
+                      }}>
+                      <Typography
+                        ml="5px"
+                        onClick={() => handleOpenModal(post._id)}>
+                        Update Post
+                      </Typography>
+                    </Box>
+                  </Popover>
                 </Box>
                 <Box
                   display="flex"
                   flexDirection="column"
-                  ml="35px"
+                  ml="25px"
+                  mt="10px"
                   pl="31px"
                   pb="10px">
                   <Typography
@@ -236,10 +367,10 @@ const UserDetail = () => {
                   display="flex"
                   width="100%"
                   justifyContent="space-between"
+                  pt="10px"
                   mb="10px">
                   <Box
                     display="flex"
-                    ml="10px"
                     height="40px"
                     onClick={() => handleLike(post)}
                     sx={{
@@ -256,10 +387,11 @@ const UserDetail = () => {
                   <Box
                     display="flex"
                     height="40px"
+                    onClick={() => handleCommentAdd(post)}
                     sx={{
                       cursor: "pointer",
                       alignItems: "center",
-                      width: "22%",
+                      p: "0px 10px 0px 10px",
                       justifyContent: "center",
                       color: "#676767",
                       "&:hover": { background: "#f1efef" },
@@ -267,23 +399,74 @@ const UserDetail = () => {
                     <MessageIcon />
                     <Typography ml="5px">Comment</Typography>
                   </Box>
+                </Box>
+                {post.comment && (
                   <Box
                     display="flex"
-                    height="40px"
-                    onClick={() => {
-                      handleRepost(post);
-                    }}
-                    sx={{
-                      cursor: "pointer",
-                      alignItems: "center",
-                      width: "22%",
-                      justifyContent: "center",
-                      color: "#676767",
-                      "&:hover": { background: "#f1efef" },
-                    }}>
-                    <DeleteIcon />
-                    <Typography ml="5px">Delete</Typography>
+                    pb="20px"
+                    alignItems="center"
+                    width="100%"
+                    gap="5px"
+                    borderBottom="1px solid rgba(0,0,0,0.3)">
+                    <Avatar sx={{ width: "40px", height: "40px", ml: "10px" }}>
+                      A
+                    </Avatar>
+                    <TextField
+                      onKeyDown={(e) => {
+                        handleComment(e, post);
+                      }}
+                      onChange={(e) => {
+                        setComment(e.target.value);
+                      }}
+                      value={comment}
+                      id={`outlined-basic-${post._id}`}
+                      sx={{ width: "89%" }}
+                      placeholder="Enter your comment.."
+                      variant="outlined"
+                    />
                   </Box>
+                )}
+                <Box display="flex" flexDirection="column">
+                  {post.commentPost?.map((obj, index) => {
+                    return (
+                      <Box key={obj._id} display="flex" p="10px">
+                        <Avatar
+                          sx={{
+                            width: "40px",
+                            height: "40px",
+                            background: "#bdbdef",
+                            color: "white",
+                          }}>
+                          A
+                        </Avatar>
+                        <Typography
+                          variant="h1"
+                          ml="10px"
+                          alignSelf="center"
+                          fontSize="16px"
+                          width="100%"
+                          borderRadius="10px"
+                          height="36px"
+                          display="flex"
+                          alignItems="center"
+                          pl="7px"
+                          fontWeight="600"
+                          sx={{ background: "#dcdada" }}>
+                          {obj}
+                        </Typography>
+                        <MoreHorizIcon
+                          onClick={() => openModalTwo(post, index)}
+                          sx={{
+                            m: "3px 5px 0px 5px",
+                            cursor: "pointer",
+                            borderRadius: "25px",
+                            p: "5px",
+                            "&:hover": { background: "lightgray" },
+                          }}
+                        />
+                      </Box>
+                    );
+                  })}
                 </Box>
               </Box>
             );
@@ -363,7 +546,61 @@ const UserDetail = () => {
               onClick={handlePostSubmit}
               variant="contained"
               color="primary">
-              Submit
+              Update
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
+      <Modal open={isModalTwoOpen} onClose={closeModalTwo}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: "744px",
+            bgcolor: "background.paper",
+            boxShadow: 24,
+            p: 4,
+            "@media(max-width:800px)": {
+              width: "500px",
+            },
+            "@media(max-width:600px)": {
+              width: "300px",
+            },
+          }}>
+          <Box display="flex" alignItems="center" gap="12px">
+            <Avatar width="50px" height="50px">
+              A
+            </Avatar>
+            <Typography fontSize="20px" fontWeight="600">
+              {userName}
+            </Typography>
+          </Box>
+          <TextField
+            onChange={(e) => setResetComment(e.target.value)}
+            onKeyDown={handleEditComment}
+            value={resetComment}
+            sx={{
+              ml: "30px",
+              mt: "10px",
+              "& .MuiOutlinedInput-root": {
+                "& fieldset": {
+                  borderRadius: "10px",
+                },
+              },
+              width: "92%",
+            }}
+            placeholder="Reset your Comment...."
+            variant="outlined"
+          />
+          <Box display="flex" m="15px 0px 0px 48px">
+            <Typography alignSelf="center">Delete Your Comment</Typography>
+            <Button
+              onClick={handleDeleteComment}
+              variant="contained"
+              sx={{ m: "0px 0px 0px 10px", p: "10px 20px 10px 20px" }}>
+              Delete
             </Button>
           </Box>
         </Box>

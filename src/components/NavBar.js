@@ -7,6 +7,7 @@ import {
   InputAdornment,
   InputLabel,
   MenuItem,
+  Popover,
   Select,
   Stack,
   TextField,
@@ -32,6 +33,18 @@ const NavBar = () => {
   const [search, setSearch] = useState("");
   const [{ posts }] = useStateProvider();
   const navigate = useNavigate();
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? "simple-popover" : undefined;
 
   const handleEnterKey = (event) => {
     if (event.key === "Enter") {
@@ -94,7 +107,7 @@ const NavBar = () => {
           <Box display="flex" mt="7px" width="98%">
             <img
               src={logo2}
-              style={{ width: "50px", height: "50px", cursor: "pointer" }}
+              className="linkedInLogo"
               onClick={() => navigate("/")}
             />
             <ArrowBackIcon
@@ -139,7 +152,7 @@ const NavBar = () => {
           <Box display="flex" mt="7px" width="28%">
             <img
               src={logo2}
-              style={{ width: "50px", height: "50px", cursor: "pointer" }}
+              className="linkedInLogo"
               onClick={() => navigate("/")}
             />
             {!isSmallScreen ? (
@@ -176,6 +189,10 @@ const NavBar = () => {
                   cursor: "pointer",
                   borderRadius: "25px",
                   "&:hover": { background: "#e4e3e2" },
+                  "@media(max-width:460px)": {
+                    width: "30px",
+                    height: "30px",
+                  },
                 }}
               />
             )}
@@ -269,6 +286,64 @@ const NavBar = () => {
                 )}
               </ToggleButton>
               <ToggleButton
+                aria-describedby={id}
+                sx={{
+                  cursor: "pointer",
+                  display: "flex",
+                  flexDirection: "column",
+                  border: "none",
+                }}
+                variant="contained"
+                onClick={handleClick}>
+                <Avatar sx={{ width: "25px", height: "25px" }} />
+                {isSmallScreen ? null : (
+                  <Typography
+                    variant="h3"
+                    sx={{ textTransform: "none" }}
+                    fontSize="15px">
+                    {localStorage.getItem("userName")}
+                  </Typography>
+                )}
+              </ToggleButton>
+              <Popover
+                id={id}
+                open={open}
+                anchorEl={anchorEl}
+                onClose={handleClose}
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "left",
+                }}
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}>
+                <MenuItem
+                  sx={{ gap: "5px" }}
+                  onClick={() => {
+                    navigate("/");
+                    handleClose();
+                  }}>
+                  <Avatar sx={{ width: "25px", height: "25px" }} />{" "}
+                  {localStorage.getItem("userName")}
+                </MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    navigate("/user");
+                    handleClose();
+                  }}>
+                  View Profile
+                </MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    navigate("/premium");
+                    handleClose();
+                  }}>
+                  Try Premium for free
+                </MenuItem>
+                {/* <MenuItem>Sign Out</MenuItem> */}
+              </Popover>
+              {/* <ToggleButton
                 value="me"
                 display="flex"
                 sx={{ flexDirection: "column", border: "none" }}>
@@ -307,7 +382,7 @@ const NavBar = () => {
                     <MenuItem>Sign Out</MenuItem>
                   </Select>
                 </Stack>
-              </ToggleButton>
+              </ToggleButton> */}
             </ToggleButtonGroup>
           </Stack>
         </>

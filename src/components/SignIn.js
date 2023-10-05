@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import logo from "../images/logo.png";
 import "../styles/App.css";
 import {
@@ -18,13 +18,29 @@ import { useStateProvider } from "../utils/StateProvider";
 
 function SignIn() {
   const [showPassword, setShowPassword] = useState(false);
-  const [{}, dispatch] = useStateProvider();
+  const [{ token }, dispatch] = useStateProvider();
   const [email, setEmail] = useState("aju6697@gmail.com");
   const [password, setPassword] = useState("11111111");
   const navigate = useNavigate();
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const projectId = "f104bi07c490";
+
+  useEffect(() => {
+    var jwt = localStorage.getItem("jwtToken");
+    var userN = localStorage.getItem("userName");
+    console.log(jwt);
+    if (localStorage.getItem("jwtToken")) {
+      console.log("kgkjgh");
+      dispatch({ type: "SET_NAME", userN });
+      dispatch({ type: "SET_TOKEN", jwt });
+      // navigate("/");
+    }
+  }, []);
+
+  useEffect(() => {
+    console.log(token);
+  }, [token]);
 
   let headersList = {
     projectId: projectId,

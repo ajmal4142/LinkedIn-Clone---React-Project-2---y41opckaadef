@@ -11,7 +11,7 @@ import {
 import ImageIcon from "@mui/icons-material/Image";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import ArticleIcon from "@mui/icons-material/Article";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useStateProvider } from "../../utils/StateProvider";
 import InsertPhotoIcon from "@mui/icons-material/InsertPhoto";
 import axios from "axios";
@@ -22,7 +22,7 @@ const Postbar = () => {
   const [postTitle, setPostTitle] = useState("");
   const [postContent, setPostContent] = useState("");
   const [postImage, setPostImage] = useState(null);
-  const [{ userName, token }, dispatch] = useStateProvider();
+  const [{ userName, token, ownPost }, dispatch] = useStateProvider();
   const fileInputRef = useRef(null);
 
   const openModal = () => {
@@ -65,12 +65,17 @@ const Postbar = () => {
         )
         .then((response) => {
           console.log(response.data.data);
+          const existingPosts =
+            JSON.parse(localStorage.getItem("ownPostData")) || [];
+          const updatedPosts = [...existingPosts, response.data.data];
 
-          dispatch({ type: "SET_OWNPOST", payload: response.data.data });
+          localStorage.setItem("ownPostData", JSON.stringify(updatedPosts));
+          const ownPostData =
+            JSON.parse(localStorage.getItem("ownPostData")) || [];
+          dispatch({ type: "SET_OWNPOST", payload: ownPostData });
         })
         .catch((err) => console.log(err));
 
-      // Clear the form after successful submission
       setPostTitle("");
       setPostContent("");
       setPostImage(null);
@@ -80,7 +85,9 @@ const Postbar = () => {
       console.error("Error posting:", error);
     }
   };
-
+  useEffect(() => {
+    console.log(ownPost);
+  }, [ownPost]);
   return (
     <Box width="100%" borderRadius="10px" sx={{ background: "white" }}>
       <Box display="flex">

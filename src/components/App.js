@@ -19,12 +19,29 @@ import Notification from "./Notification";
 function App() {
   const location = useLocation();
   const navigate = useNavigate();
-  const [{ token }] = useStateProvider();
+  const [{ token, ownPost }, dispatch] = useStateProvider();
+
   useEffect(() => {
-    if (!token && location.pathname != "/signin") {
+    const jwtToken = localStorage.getItem("jwtToken");
+    const userName = localStorage.getItem("userName");
+
+    if (jwtToken && userName) {
+      dispatch({ type: "SET_NAME", payload: userName });
+      dispatch({ type: "SET_TOKEN", payload: jwtToken });
+
+      const groupData = JSON.parse(localStorage.getItem("groupData")) || [];
+      dispatch({ type: "SET_GROUP", payload: groupData });
+
+      const ownPostData = JSON.parse(localStorage.getItem("ownPostData")) || [];
+      dispatch({ type: "SET_OWNPOST", payload: ownPostData });
+    } else {
       navigate("/signin");
     }
-  }, [location.pathname, history]);
+  }, [navigate, dispatch]);
+
+  useEffect(() => {
+    console.log(ownPost);
+  }, [ownPost]);
   return (
     <>
       {location.pathname === "/signup" ? (

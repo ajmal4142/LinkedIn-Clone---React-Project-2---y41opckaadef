@@ -14,15 +14,9 @@ const reducer = (state, action) => {
     case "SET_POST":
       return { ...state, posts: action.payload };
     case "SET_OWNPOST":
-      const newOwnPost = state.ownPost.filter(
-        (post) => post._id !== action.payload._id,
-      );
-      return { ...state, ownPost: [...newOwnPost, action.payload] };
+      return { ...state, ownPost: action.payload };
     case "SET_GROUP":
-      const newGroup = state.groupPost.filter(
-        (post) => post._id !== action.payload._id,
-      );
-      return { ...state, groupPost: [...newGroup, action.payload] };
+      return { ...state, groupPost: action.payload };
     case "REMOVE_GROUP_POST":
       const updatedGroupPost = state.groupPost.filter(
         (post) => post._id !== action.payload,

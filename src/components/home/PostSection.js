@@ -33,7 +33,7 @@ const PostSection = () => {
 
   useEffect(() => {
     axios
-      .get("https://academics.newtonschool.co/api/v1/linkedin/post?limit=50", {
+      .get("https://academics.newtonschool.co/api/v1/linkedin/post?limit=98", {
         headers: {
           projectId: "f104bi07c490",
         },
@@ -211,8 +211,8 @@ const PostSection = () => {
       {posts.length != 0 ? (
         <Box display="flex" flexDirection="column">
           {posts
-            // ?.slice()
-            // .reverse()
+            ?.slice()
+            .reverse()
             .map((post, index) => {
               const followers = Math.floor(Math.random() * 10000) + 1;
               const uniqueKey = uuidv4();
@@ -423,9 +423,13 @@ const PostSection = () => {
                             alignSelf="center"
                             fontSize="16px"
                             width="100%"
-                            borderRadius="25px"
+                            borderRadius="10px"
+                            height="36px"
+                            display="flex"
+                            alignItems="center"
                             pl="7px"
-                            fontWeight="600">
+                            fontWeight="600"
+                            sx={{ background: "#dcdada" }}>
                             {obj.content}
                           </Typography>
                           <EditIcon

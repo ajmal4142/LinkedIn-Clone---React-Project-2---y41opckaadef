@@ -27,6 +27,7 @@ const Groups = () => {
   const [groupImage, setGroupImage] = useState("");
   const fileInputRef = useRef(null);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [groupPosts, setGroupPosts] = useState(null);
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -51,8 +52,10 @@ const Groups = () => {
     }
   };
 
-  const handleClick = (event) => {
+  const handleClick = (event, obj) => {
     setAnchorEl(event.currentTarget);
+    setGroupPosts(obj);
+    console.log(obj);
   };
 
   const handleClose = () => {
@@ -81,7 +84,15 @@ const Groups = () => {
           response?.response?.message == "Channel with this name already exists"
         )
           alert("Channel with this name already exists");
-        dispatch({ type: "SET_GROUP", payload: response.data.data });
+
+        const existingGroups =
+          JSON.parse(localStorage.getItem("groupData")) || [];
+
+        const updatedGroups = [...existingGroups, response.data.data];
+
+        localStorage.setItem("groupData", JSON.stringify(updatedGroups));
+        dispatch({ type: "SET_GROUP", payload: updatedGroups });
+
         setGroupTitle("");
         setGroupImage(null);
         setGroupDescription("");
@@ -93,9 +104,10 @@ const Groups = () => {
   };
 
   const handleDeleteGroup = (obj) => {
+    console.log(groupPosts);
     axios
       .delete(
-        `https://academics.newtonschool.co/api/v1/linkedin/channel/${obj._id}`,
+        `https://academics.newtonschool.co/api/v1/linkedin/channel/${groupPosts._id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -105,11 +117,31 @@ const Groups = () => {
       )
       .then((response) => {
         console.log(response);
-        dispatch({ type: "REMOVE_GROUP_POST", payload: obj._id });
+        const existingGroups =
+          JSON.parse(localStorage.getItem("groupData")) || [];
+
+        const updatedGroups = existingGroups.filter(
+          (group) => group._id !== groupPosts._id,
+        );
+
+        localStorage.setItem("groupData", JSON.stringify(updatedGroups));
+        dispatch({ type: "REMOVE_GROUP_POST", payload: groupPosts._id });
       })
       .catch((err) => {
         console.log(err);
+        if (err?.response?.data?.message === "No document found with that ID") {
+          const existingGroups =
+            JSON.parse(localStorage.getItem("groupData")) || [];
+
+          const updatedGroups = existingGroups.filter(
+            (group) => group._id !== obj._id,
+          );
+
+          localStorage.setItem("groupData", JSON.stringify(updatedGroups));
+          dispatch({ type: "REMOVE_GROUP_POST", payload: obj._id });
+        }
       });
+    setAnchorEl(null);
   };
 
   const handleUpdateGroup = () => {
@@ -244,7 +276,9 @@ const Groups = () => {
               </Box>
               <MoreHorizIcon
                 aria-describedby={id}
-                onClick={handleClick}
+                onClick={(e) => {
+                  handleClick(e, obj);
+                }}
                 sx={{
                   alignSelf: "center",
                   mr: "16px",
@@ -274,7 +308,7 @@ const Groups = () => {
                   }}>
                   Delete Group
                 </Typography>
-                <Typography
+                {/* <Typography
                   p="18px"
                   onClick={() => {
                     setFlag(true);
@@ -286,7 +320,7 @@ const Groups = () => {
                     "&:hover": { background: "lightgray" },
                   }}>
                   Edit Group
-                </Typography>
+                </Typography> */}
                 <Typography
                   p="18px"
                   onClick={() => navigate("/")}
