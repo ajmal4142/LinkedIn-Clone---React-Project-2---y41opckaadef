@@ -14,9 +14,10 @@ body{
   background-color: #f3f2f0;
 }
 
-.linkedInLogo{
+.linkedInLogo2{
   width: 150px;
   height: 70px;
+  cursor: pointer;
 }
 .signUpBox{
   width: 400px;

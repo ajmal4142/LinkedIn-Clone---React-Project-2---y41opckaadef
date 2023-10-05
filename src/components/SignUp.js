@@ -84,7 +84,11 @@ function SignUp() {
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
       <Box display="flex" justifyContent="center">
-        <img src={logo} className="linkedInLogo" />
+        <img
+          src={logo}
+          className="linkedInLogo2"
+          onClick={() => navigate("/")}
+        />
       </Box>
       <Typography variant="h4" textAlign="center" fontSize="32px" mt="20px">
         Make the most of your professional life

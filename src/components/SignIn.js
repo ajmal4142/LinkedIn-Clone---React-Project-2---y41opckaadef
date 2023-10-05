@@ -92,7 +92,11 @@ function SignIn() {
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
       <Box display="flex" justifyContent="center">
-        <img src={logo} className="linkedInLogo" />
+        <img
+          src={logo}
+          className="linkedInLogo2"
+          onClick={() => navigate("/")}
+        />
       </Box>
 
       <Box className="signUpBox">
