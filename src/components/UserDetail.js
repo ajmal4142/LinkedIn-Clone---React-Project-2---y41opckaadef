@@ -136,7 +136,8 @@ const UserDetail = () => {
       updatedPost.liked = !updatedPost.liked;
       updatedPosts[postIndex] = updatedPost;
       console.log(ownPost);
-      dispatch({ type: "SET_OWNPOSTDUP", payload: updatedPosts });
+      localStorage.setItem("ownPostData", JSON.stringify(updatedPosts));
+      dispatch({ type: "SET_OWNPOST", payload: updatedPosts });
     }
   };
 
@@ -170,6 +171,7 @@ const UserDetail = () => {
   };
   const handleEditComment = (event) => {
     if (event.key === "Enter") {
+      closeModalTwo();
       const postIndex = ownPost.findIndex((p) => p._id === saveId);
       console.log("post", postIndex);
       if (postIndex !== -1) {

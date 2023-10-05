@@ -104,7 +104,7 @@ const NavBar = () => {
       sx={{ background: "#ffffff", pb: searchInputVisible && "10px" }}>
       {searchInputVisible ? (
         <>
-          <Box display="flex" mt="7px" width="98%">
+          <Box display="flex" mt="3px" width="98%">
             <img
               src={logo2}
               className="linkedInLogo"
@@ -149,7 +149,7 @@ const NavBar = () => {
         </>
       ) : (
         <>
-          <Box display="flex" mt="7px" width="28%">
+          <Box display="flex" mt="3px" width="28%">
             <img
               src={logo2}
               className="linkedInLogo"
