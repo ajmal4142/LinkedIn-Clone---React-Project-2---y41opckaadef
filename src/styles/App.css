@@ -67,6 +67,9 @@ body{
   margin-left: 0;
 }
 
+input{
+  scroll-margin-top:0 ;}
+
 
 .headingsection{
   font-weight: 600 !important;

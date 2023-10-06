@@ -13,7 +13,7 @@ import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import MessageIcon from "@mui/icons-material/Message";
 import RepeatIcon from "@mui/icons-material/Repeat";
 import SendIcon from "@mui/icons-material/Send";
-import { json, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import LoopIcon from "@mui/icons-material/Loop";
 import EditIcon from "@mui/icons-material/Edit";
 import { v4 as uuidv4 } from "uuid";
@@ -32,31 +32,25 @@ const PostSection = () => {
   let followers;
 
   useEffect(() => {
-    if (!posts) {
-      console.log("there is no post");
-      axios
-        .get(
-          "https://academics.newtonschool.co/api/v1/linkedin/post?limit=98",
-          {
-            headers: {
-              projectId: "f104bi07c490",
-            },
-          },
-        )
-        .then((response) => {
-          localStorage.setItem("posts", JSON.stringify(response.data.data));
-          dispatch({
-            type: "SET_POST",
-            payload: response.data.data,
-          });
-          console.log(token);
-        })
-        .catch((error) => {
-          setOnline(false);
-          console.log(error);
+    axios
+      .get("https://academics.newtonschool.co/api/v1/linkedin/post?limit=98", {
+        headers: {
+          projectId: "f104bi07c490",
+        },
+      })
+      .then((response) => {
+        // console.log(response.data.data);
+        dispatch({
+          type: "SET_POST",
+          payload: response.data.data,
         });
-    }
-  }, [posts]);
+        console.log(token);
+      })
+      .catch((error) => {
+        setOnline(false);
+        console.log(error);
+      });
+  }, []);
 
   useEffect(() => {
     console.log("posts", posts);
@@ -84,9 +78,9 @@ const PostSection = () => {
     }
   };
 
-  const handleComment = (event, postId) => {
+  const handleComment = (event) => {
+    const postIndex = posts.findIndex((p) => p._id === commentPost._id);
     if (event.key === "Enter") {
-      const postIndex = posts.findIndex((p) => p._id === postId);
       const bodyContent = {
         content: comment,
       };
@@ -97,7 +91,7 @@ const PostSection = () => {
 
       axios
         .post(
-          `https://academics.newtonschool.co/api/v1/linkedin/comment/${postId}`,
+          `https://academics.newtonschool.co/api/v1/linkedin/comment/${commentPost._id}`,
           bodyContent,
           { headers: headersList },
         )
@@ -105,7 +99,7 @@ const PostSection = () => {
           console.log("first response", response);
           axios
             .get(
-              `https://academics.newtonschool.co/api/v1/linkedin/post/${postId}/comments`,
+              `https://academics.newtonschool.co/api/v1/linkedin/post/${commentPost._id}/comments`,
               { headers: headersList },
             )
             .then((response) => {
@@ -121,18 +115,16 @@ const PostSection = () => {
             .catch((err) => {
               console.log(err);
               if (err.code === "ERR_NETWORK") {
-                alert("Check Your Connection");
+                alert("Check Your Connenction");
               }
             });
         })
         .catch((err) => {
           console.log(err);
           if (err.code === "ERR_NETWORK") {
-            alert("Check Your Connection");
+            alert("Check Your Connenction");
           }
         });
-
-      // Reset the comment state for the specific post
       setComment("");
     }
   };
@@ -216,17 +208,17 @@ const PostSection = () => {
   };
   return (
     <>
-      {Array.isArray(posts) && posts.length !== 0 ? (
+      {posts.length != 0 ? (
         <Box display="flex" flexDirection="column">
           {posts
-            .slice()
+            ?.slice()
             .reverse()
             .map((post, index) => {
               const followers = Math.floor(Math.random() * 10000) + 1;
               const uniqueKey = uuidv4();
               return (
                 <Box
-                  key={uniqueKey}
+                  key={post._id}
                   sx={{
                     background: "white",
                     borderRadius: "15px",
@@ -328,12 +320,12 @@ const PostSection = () => {
                     <Box
                       display="flex"
                       height="40px"
-                      mr="10px"
                       onClick={() => handleCommentAdd(post)}
                       sx={{
                         cursor: "pointer",
                         alignItems: "center",
                         width: "25%",
+                        mr: "10px",
                         justifyContent: "center",
                         color: "#676767",
                         "&:hover": { background: "#f1efef" },
@@ -396,18 +388,14 @@ const PostSection = () => {
                         A
                       </Avatar>
                       <TextField
-                        onKeyDown={(e) => {
-                          e.preventDefault();
-                          handleComment(e);
-                        }}
+                        onKeyDown={handleComment}
                         onChange={(e) => {
                           setComment(e.target.value);
+                          console.log(e.target.value);
                         }}
                         value={comment}
-                        sx={{
-                          width: "85%",
-                          ml: "10px",
-                        }}
+                        id={uniqueKey}
+                        sx={{ width: "85%" }}
                         placeholder="Enter your comment.."
                         variant="outlined"
                       />
