@@ -22,6 +22,7 @@ const SideBar = () => {
           "@media (max-width: 644px)": {
             width: "94%",
             alignSelf: "center",
+            position: "unset",
           },
         }}>
         <Avatar

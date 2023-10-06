@@ -13,7 +13,7 @@ import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import MessageIcon from "@mui/icons-material/Message";
 import RepeatIcon from "@mui/icons-material/Repeat";
 import SendIcon from "@mui/icons-material/Send";
-import { useNavigate } from "react-router-dom";
+import { json, useNavigate } from "react-router-dom";
 import LoopIcon from "@mui/icons-material/Loop";
 import EditIcon from "@mui/icons-material/Edit";
 import { v4 as uuidv4 } from "uuid";
@@ -32,25 +32,31 @@ const PostSection = () => {
   let followers;
 
   useEffect(() => {
-    axios
-      .get("https://academics.newtonschool.co/api/v1/linkedin/post?limit=98", {
-        headers: {
-          projectId: "f104bi07c490",
-        },
-      })
-      .then((response) => {
-        // console.log(response.data.data);
-        dispatch({
-          type: "SET_POST",
-          payload: response.data.data,
+    if (!posts) {
+      console.log("there is no post");
+      axios
+        .get(
+          "https://academics.newtonschool.co/api/v1/linkedin/post?limit=98",
+          {
+            headers: {
+              projectId: "f104bi07c490",
+            },
+          },
+        )
+        .then((response) => {
+          localStorage.setItem("posts", JSON.stringify(response.data.data));
+          dispatch({
+            type: "SET_POST",
+            payload: response.data.data,
+          });
+          console.log(token);
+        })
+        .catch((error) => {
+          setOnline(false);
+          console.log(error);
         });
-        console.log(token);
-      })
-      .catch((error) => {
-        setOnline(false);
-        console.log(error);
-      });
-  }, []);
+    }
+  }, [posts]);
 
   useEffect(() => {
     console.log("posts", posts);
@@ -73,13 +79,14 @@ const PostSection = () => {
 
       updatedPost.liked = !updatedPost.liked; // Toggle the 'liked' property
       updatedPosts[postIndex] = updatedPost;
+      localStorage.setItem("posts", JSON.stringify(updatedPosts));
       dispatch({ type: "SET_POST", payload: updatedPosts });
     }
   };
 
-  const handleComment = (event) => {
-    const postIndex = posts.findIndex((p) => p._id === commentPost._id);
+  const handleComment = (event, postId) => {
     if (event.key === "Enter") {
+      const postIndex = posts.findIndex((p) => p._id === postId);
       const bodyContent = {
         content: comment,
       };
@@ -90,7 +97,7 @@ const PostSection = () => {
 
       axios
         .post(
-          `https://academics.newtonschool.co/api/v1/linkedin/comment/${commentPost._id}`,
+          `https://academics.newtonschool.co/api/v1/linkedin/comment/${postId}`,
           bodyContent,
           { headers: headersList },
         )
@@ -98,7 +105,7 @@ const PostSection = () => {
           console.log("first response", response);
           axios
             .get(
-              `https://academics.newtonschool.co/api/v1/linkedin/post/${commentPost._id}/comments`,
+              `https://academics.newtonschool.co/api/v1/linkedin/post/${postId}/comments`,
               { headers: headersList },
             )
             .then((response) => {
@@ -114,16 +121,18 @@ const PostSection = () => {
             .catch((err) => {
               console.log(err);
               if (err.code === "ERR_NETWORK") {
-                alert("Check Your Connenction");
+                alert("Check Your Connection");
               }
             });
         })
         .catch((err) => {
           console.log(err);
           if (err.code === "ERR_NETWORK") {
-            alert("Check Your Connenction");
+            alert("Check Your Connection");
           }
         });
+
+      // Reset the comment state for the specific post
       setComment("");
     }
   };
@@ -177,7 +186,6 @@ const PostSection = () => {
   };
 
   const handleEditComment = (event) => {
-    const postIndex = posts.findIndex((p) => p._id === commentPost._id);
     if (event.key === "Enter") {
       const bodyContent = {
         content: resetComment,
@@ -208,10 +216,10 @@ const PostSection = () => {
   };
   return (
     <>
-      {posts.length != 0 ? (
+      {Array.isArray(posts) && posts.length !== 0 ? (
         <Box display="flex" flexDirection="column">
           {posts
-            ?.slice()
+            .slice()
             .reverse()
             .map((post, index) => {
               const followers = Math.floor(Math.random() * 10000) + 1;
@@ -320,6 +328,7 @@ const PostSection = () => {
                     <Box
                       display="flex"
                       height="40px"
+                      mr="10px"
                       onClick={() => handleCommentAdd(post)}
                       sx={{
                         cursor: "pointer",
@@ -387,13 +396,18 @@ const PostSection = () => {
                         A
                       </Avatar>
                       <TextField
-                        onKeyDown={handleComment}
+                        onKeyDown={(e) => {
+                          e.preventDefault();
+                          handleComment(e);
+                        }}
                         onChange={(e) => {
                           setComment(e.target.value);
                         }}
                         value={comment}
-                        id={`outlined-basic-${post._id}`}
-                        sx={{ width: "85%", ml: "10px" }}
+                        sx={{
+                          width: "85%",
+                          ml: "10px",
+                        }}
                         placeholder="Enter your comment.."
                         variant="outlined"
                       />

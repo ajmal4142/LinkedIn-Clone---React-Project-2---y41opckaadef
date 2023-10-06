@@ -34,6 +34,16 @@ function App() {
 
       const ownPostData = JSON.parse(localStorage.getItem("ownPostData")) || [];
       dispatch({ type: "SET_OWNPOST", payload: ownPostData });
+
+      try {
+        const savedPosts = localStorage.getItem("posts");
+        if (savedPosts) {
+          const parsedPosts = JSON.parse(savedPosts);
+          dispatch({ type: "SET_POST", payload: parsedPosts });
+        }
+      } catch (error) {
+        console.error("Error parsing posts data:", error);
+      }
     } else if (location.pathname === "/signup") {
       navigate("/signup");
     } else if (location.pathname === "/forgot") {
