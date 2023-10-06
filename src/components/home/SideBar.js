@@ -33,7 +33,7 @@ const SideBar = () => {
             background: "#0a66c2",
             cursor: "pointer",
           }}>
-          {userName[0]}
+          {userName ? userName[0] : ""}
         </Avatar>
 
         <Typography

@@ -206,7 +206,7 @@ const NavBar = () => {
           <Stack spacing={2} alignItems="center">
             <ToggleButtonGroup
               color="primary"
-              value={alignment}
+              value="home"
               exclusive
               onChange={handleChange}
               sx={{ gap: "10px", "@media(max-width:766px)": { gap: "0px" } }}
@@ -302,7 +302,7 @@ const NavBar = () => {
                 variant="contained"
                 onClick={handleClick}>
                 <Avatar sx={{ width: "25px", height: "25px" }}>
-                  {userName[0]}
+                  {userName ? userName[0] : ""}
                 </Avatar>
                 {isSmallScreen ? null : (
                   <Typography
@@ -333,7 +333,7 @@ const NavBar = () => {
                     handleClose();
                   }}>
                   <Avatar sx={{ width: "25px", height: "25px" }}>
-                    {userName[0]}
+                    {userName ? userName[0] : ""}
                   </Avatar>{" "}
                   {localStorage.getItem("userName")}
                 </MenuItem>
@@ -352,6 +352,9 @@ const NavBar = () => {
                   Try Premium for free
                 </MenuItem>
                 <MenuItem onClick={handleSignOut}>Sign Out</MenuItem>
+                {/* <MenuItem onClick={() => navigate("/forgot")}>
+                  Update Password?
+                </MenuItem> */}
               </Popover>
             </ToggleButtonGroup>
           </Stack>

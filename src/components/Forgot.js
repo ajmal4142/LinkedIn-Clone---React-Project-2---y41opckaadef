@@ -39,7 +39,6 @@ function Forgot() {
     try {
       console.log(reqOptions);
       let response = await axios.request(reqOptions);
-      console.log(response);
       if (response.status === 200) {
         console.log(response);
         // dispatch({ type: "SET_NAME", payload: response.data.name });
@@ -50,8 +49,8 @@ function Forgot() {
       }
     } catch (error) {
       const errMsg = error?.response?.data?.message;
-      console.log(error?.response);
-      //   alert(error, errMsg);
+      console.log(error);
+      alert(error.response?.statusText + " Please Try agin later");
     }
   };
 

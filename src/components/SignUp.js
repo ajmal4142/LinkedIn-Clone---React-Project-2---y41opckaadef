@@ -63,6 +63,12 @@ function SignUp() {
       if (errMsg === "User already exists") {
         alert("User already exist");
         navigate("/signin");
+      } else if (errMsg === "Invalid input data. A user must have a name") {
+        alert("Invalid input data. A user must have a name");
+      } else if (
+        errMsg === "Invalid input data. Please provide a valid email"
+      ) {
+        alert("Invalid input data. Please provide a valid email");
       } else {
         console.log("error");
       }
@@ -76,9 +82,13 @@ function SignUp() {
       appType: "linkedin",
     });
 
-    reqOptions.data = bodyContent; // Update the data in the request options
+    reqOptions.data = bodyContent;
 
-    login();
+    if (password.length < 8) {
+      alert("Password should contain more than 8 characters.");
+    } else {
+      login();
+    }
   };
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>

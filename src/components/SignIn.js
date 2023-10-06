@@ -68,6 +68,9 @@ function SignIn() {
     } catch (error) {
       const errMsg = error?.response?.data?.message;
       console.error(error, errMsg);
+      if (errMsg === "Incorrect EmailId or Password") {
+        alert("Incorrect EmailId or Password");
+      }
     }
   };
 
