@@ -20,6 +20,10 @@ const Details = () => {
   };
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
     try {
       axios
         .get(
@@ -38,60 +42,70 @@ const Details = () => {
       console.log(err);
     }
   }, []);
+
   useEffect(() => {
-    console.log(profile);
-  }, [profile]);
+    const ownFollow = JSON.parse(localStorage.getItem("follow")) || [];
+
+    if (profile && profile._id) {
+      const profileExists = ownFollow.some((item) => item._id === profile._id);
+
+      if (profileExists && !profile.follow) {
+        const updatedProfile = { ...profile, follow: true };
+        dispatch({
+          type: "SET_PROFILE",
+          payload: updatedProfile,
+        });
+      }
+    }
+  }, [profile, dispatch]);
 
   var follower;
   var Connection;
   const projectId = "f104bi07c490";
-  const handleFollow = async () => {
-    await axios
-      .post(
-        `https://academics.newtonschool.co/api/v1/linkedin/follow/${profile._id}`,
-        null,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            projectId: projectId,
-          },
-        },
-      )
-      .then((response) => {
-        if (response.data.message === "User followed successfully") {
-          setisFollowed(true);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-        if (
-          err.response.data.message === "You're already following this user"
-        ) {
-          setisFollowed(true);
-        }
-      });
+
+  const handleFollow = () => {
+    if (profile && profile._id) {
+      const ownFollow = JSON.parse(localStorage.getItem("follow")) || [];
+      const profileExistsIndex = ownFollow.findIndex(
+        (item) => item._id === profile._id,
+      );
+      if (profileExistsIndex !== -1) {
+        ownFollow[profileExistsIndex].follow = true;
+        dispatch({
+          type: "SET_PROFILE",
+          payload: ownFollow[profileExistsIndex],
+        });
+      } else {
+        // If the profile doesn't exist in ownFollow, add it
+        profile.follow = true;
+        console.log("jabfkhdjacf", profile);
+        ownFollow.push(profile);
+        dispatch({
+          type: "SET_PROFILE",
+          payload: profile,
+        });
+      }
+
+      localStorage.setItem("follow", JSON.stringify(ownFollow));
+    }
   };
-  const handleUnFollow = async () => {
-    await axios
-      .delete(
-        `https://academics.newtonschool.co/api/v1/linkedin/follow/${profile._id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            projectId: projectId,
-          },
-        },
-      )
-      .then((response) => {
-        if (response.data.message === "User followed successfully") {
-          setisFollowed(true);
-        } else {
-          setisFollowed(false);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
+
+  const handleUnFollow = () => {
+    if (profile && profile._id) {
+      const ownFollow = JSON.parse(localStorage.getItem("follow")) || [];
+      const profileExistsIndex = ownFollow.findIndex(
+        (item) => item._id === profile._id,
+      );
+
+      ownFollow[profileExistsIndex] = profile;
+      ownFollow[profileExistsIndex].follow = false;
+      localStorage.setItem("follow", JSON.stringify(ownFollow));
+
+      dispatch({
+        type: "SET_PROFILE",
+        payload: ownFollow[profileExistsIndex],
       });
+    }
   };
 
   return (
@@ -102,9 +116,9 @@ const Details = () => {
         margin="auto"
         borderRadius="12px"
         pb="20px"
+        position="relative"
         sx={{ background: "white" }}
-        mt="25px"
-        position="relative">
+        mt="25px">
         <img
           src={profile?.profileImage}
           width="100%"
@@ -152,7 +166,7 @@ const Details = () => {
                 Message
               </Button>
 
-              {isFollowed ? (
+              {profile?.follow ? (
                 <Button
                   onClick={handleUnFollow}
                   sx={{ borderRadius: "25px", px: "20px" }}

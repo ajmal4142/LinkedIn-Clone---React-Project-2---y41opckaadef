@@ -32,24 +32,32 @@ const PostSection = () => {
   let followers;
 
   useEffect(() => {
-    axios
-      .get("https://academics.newtonschool.co/api/v1/linkedin/post?limit=98", {
-        headers: {
-          projectId: "f104bi07c490",
-        },
-      })
-      .then((response) => {
-        // console.log(response.data.data);
-        dispatch({
-          type: "SET_POST",
-          payload: response.data.data,
+    console.log("postsdfdf", posts);
+
+    if (!localStorage.getItem("posts")) {
+      axios
+        .get(
+          "https://academics.newtonschool.co/api/v1/linkedin/post?limit=98",
+          {
+            headers: {
+              projectId: "f104bi07c490",
+            },
+          },
+        )
+        .then((response) => {
+          // console.log(response.data.data);
+          console.log("sdbfdskjfbhdkfb");
+          dispatch({
+            type: "SET_POST",
+            payload: response.data.data,
+          });
+          console.log(token);
+        })
+        .catch((error) => {
+          setOnline(false);
+          console.log(error);
         });
-        console.log(token);
-      })
-      .catch((error) => {
-        setOnline(false);
-        console.log(error);
-      });
+    }
   }, []);
 
   useEffect(() => {
